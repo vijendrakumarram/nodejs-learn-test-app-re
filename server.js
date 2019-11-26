@@ -13,6 +13,6 @@ console.log('listening on: 8080');
 
 console.log('Yeh....server is running...');
 
-io.on('connection', function(socket)){
+io.on('connection', function(socket){
   console.log('Client Connected');  
-}
+});

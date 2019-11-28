@@ -42,7 +42,7 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('client disconnect');
     players.splice(players.indexOf(thisClientId),1);
-      socket.broadcast.emit('disconnected', thisClientId);
+      socket.broadcast.emit('disconnected', {id: thisClientId});
   });
     
 });

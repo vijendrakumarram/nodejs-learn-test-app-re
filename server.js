@@ -26,6 +26,8 @@ io.on('connection', function(socket){
   console.log('Client Connected broadcasting spawn, id:', thisClientId); 
   
   socket.broadcast.emit('spawn', { id: thisClientId});
+  socket.broadcast.emit('requestPosition');
+    
     
     players.forEach(function(playerId){
     if(playerId == thisClientId)
@@ -38,6 +40,13 @@ io.on('connection', function(socket){
       data.id = thisClientId;
       console.log('client moved'+JSON.stringify(data));     socket.broadcast.emit('move',data);
   });
+    
+    socket.on('updatePosition',function(data){
+    console.log('update Position', data);
+        data.id = thisClientId;
+        socket.broadcast.emit('updatePosition', data);
+  });
+    
     
   socket.on('disconnect', function(){
     console.log('client disconnect');

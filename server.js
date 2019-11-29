@@ -25,9 +25,8 @@ io.on('connection', function(socket){
     
     var player = {
       id: thisPlayerId,
-      position: {
             x:0,
-            y:0 }    
+            y:0  
     };
   players.push(player);
   players[thisPlayerId] = player;
@@ -47,8 +46,8 @@ io.on('connection', function(socket){
   socket.on('move',function(data){
       data.id = thisPlayerId;
       console.log('client moved'+JSON.stringify(data));
-      player.position.x=data.x;
-      player.position.y=data.y
+      player.x = data.x;
+      player.y = data.y;
       socket.broadcast.emit('move',data);
   });
     

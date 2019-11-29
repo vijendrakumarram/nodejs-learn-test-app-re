@@ -25,10 +25,10 @@ io.on('connection', function(socket){
   players.push(thisClientId);
   console.log('Client Connected broadcasting spawn, id:', thisClientId); 
   
-  socket.broadcast.emit('spawn');
+  socket.broadcast.emit('spawn', { id: thisClientId});
     
     players.forEach(function(playerId){
-    if(playerId== thisClientId)
+    if(playerId == thisClientId)
             return;
        socket.emit('spawn', {id: playerId});
        console.log('sending spawn to new player for id: ',playerId); 
@@ -42,7 +42,7 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('client disconnect');
     players.splice(players.indexOf(thisClientId),1);
-      socket.broadcast.emit('disconnected', {id: thisClientId});
+      socket.broadcast.emit('disconnected', { id: thisClientId});
   });
     
 });

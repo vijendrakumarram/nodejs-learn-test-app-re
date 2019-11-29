@@ -41,14 +41,14 @@ io.on('connection', function(socket){
        
        socket.emit('spawn', players[playerId]);
        console.log('sending spawn to new player for id: ', playerId);
-    }
+    };
     
   socket.on('move',function(data){
       data.id = thisPlayerId;
       console.log('client moved'+JSON.stringify(data));
       player.x = data.x;
       player.y = data.y;
-      socket.broadcast.emit('move',data);
+      socket.broadcast.emit('move', data);
   });
     
     socket.on('updatePosition',function(data){

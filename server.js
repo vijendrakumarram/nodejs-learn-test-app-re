@@ -17,41 +17,52 @@ console.log('listening on: 8080');
 
 var shortid = require('shortid');
 var players = [];
-var playerCount=0;
+
 console.log('Yeh....server is running...');
 
 io.on('connection', function(socket){
-  var thisClientId = shortid.generate();
-  players.push(thisClientId);
-  console.log('Client Connected broadcasting spawn, id:', thisClientId); 
+  var thisPlayerId = shortid.generate();
+    
+    var player = {
+      id: thisPlayerId,
+      position: {
+            x:0,
+            y:0 }    
+    };
+  players.push(player);
+  players[thisPlayerId] = player;
+  console.log('Client Connected broadcasting spawn, id:', thisPlayerId); 
   
-  socket.broadcast.emit('spawn', { id: thisClientId});
+  socket.broadcast.emit('spawn', { id: thisPlayerId});
   socket.broadcast.emit('requestPosition');
     
     
-    players.forEach(function(playerId){
-    if(playerId == thisClientId)
-            return;
-       socket.emit('spawn', {id: playerId});
-       console.log('sending spawn to new player for id: ',playerId); 
-    });
+   for(var playerId in players){
+    if(playerId == thisPlayerId)
+       continue;
+       socket.emit('spawn', players[playerId]);
+       console.log('sending spawn to new player for id: ', playerId); 
+    }
     
   socket.on('move',function(data){
-      data.id = thisClientId;
-      console.log('client moved'+JSON.stringify(data));     socket.broadcast.emit('move',data);
+      data.id = thisPlayerId;
+      console.log('client moved'+JSON.stringify(data));
+      player.position.x=data.x;
+      player.position.y=data.y
+      socket.broadcast.emit('move',data);
   });
     
     socket.on('updatePosition',function(data){
     console.log('update Position', data);
-        data.id = thisClientId;
+        data.id = thisPlayerId;
         socket.broadcast.emit('updatePosition', data);
   });
     
     
   socket.on('disconnect', function(){
     console.log('client disconnect');
-    players.splice(players.indexOf(thisClientId),1);
-      socket.broadcast.emit('disconnected', { id: thisClientId});
+    delete players[thisPlayerId];
+      socket.broadcast.emit('disconnected', { id: thisPlayerId});
   });
     
 });
